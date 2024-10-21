@@ -7,6 +7,6 @@ const newIdSchema = new Schema({
     seq: { type: Number, default: 1 }
 })
 
-const UserIdInc = mongoose.model('ID_COUNTER',newIdSchema)
+const UserIdInc = mongoose.models.ID_COUNTER || mongoose.model('ID_COUNTER',newIdSchema)
 
 export default UserIdInc
