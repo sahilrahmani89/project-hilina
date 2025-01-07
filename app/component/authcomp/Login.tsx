@@ -8,15 +8,22 @@ import SignInWithGoogle from './SignInWithGoogle';
 import Link from 'next/link';
 
 const Login = () => {
-  const { cred, handleSubmit, loginOnChange } = useLogin()
+  const { 
+    cred, 
+    handleSubmit, 
+    loginOnChange,
+    loginError,
+   } = useLogin()
   return (
     <div className="flex flex-col h-screen md:flex-row">
       <div className="relative md:w-1/2 w-full  md:h-full">
         <Image
           src="https://via.placeholder.com/600x800"
           alt="Background"
-          layout="fill"
-          objectFit="cover"
+          // layout="fill"
+          width={1920}
+          height={1080}
+          // objectFit="cover"
           className="absolute inset-0 w-full h-full object-cover"
         />
       </div>
@@ -27,8 +34,6 @@ const Login = () => {
             <SignInWithGoogle />
           </div>
           <form className="" onSubmit={handleSubmit}>
-
-
             <div className="mb-4">
               <Input
                 label='Email'
@@ -54,13 +59,16 @@ const Login = () => {
               Login
             </Button>
           </form>
+          {
+            loginError && <p className='text-rose-600'>{loginError}</p>
+          }
           <div >
             <p className="text-sm text-center my-3">
               Don't have an account? <Link href="/signup" className="text-[#f9e136] hover:underline font-bold text-[18px]">Sign up</Link>
             </p>
             <p className='py-2'>
                 Forgot password ? <Link href={"/forgot-password"} className=''>
-                  Clike Here
+                   Click Here
                 </Link>
             </p>
           </div>

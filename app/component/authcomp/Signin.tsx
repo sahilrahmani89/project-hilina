@@ -13,6 +13,7 @@ const Signin = () => {
     handleOnChange,
     handleSubmit,
     signCred,
+    formError
   } = useSignup()
   return (
   <div className="flex flex-col h-screen md:flex-row">
@@ -20,12 +21,14 @@ const Signin = () => {
       <Image
         src="https://via.placeholder.com/600x800"
         alt="Background"
-        layout="fill"
-        objectFit="cover"
+        // layout="fill"
+        width={1920}
+        height={1080}
+        // objectFit="cover"
         className="absolute inset-0 w-full h-full object-cover"
       />
     </div>
-    <div className="flex items-center justify-center md:w-1/2 w-full bg-[#eee] bg-opacity-90 p-6 md:h-auto h-[90vh]">
+    <div className="flex items-center justify-center md:w-1/2 w-full bg-[#eee] bg-opacity-90 p-6 md:h-auto h-[90vh] overflow-auto scrollbar-hide">
         <div className='w-full max-w-sm'>
           <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
           <div className='w-full my-2'>
@@ -81,6 +84,8 @@ const Signin = () => {
               Signup
           </Button>
         </form>
+        {formError && <p className='text-rose-600'>{formError}</p>}
+
         <div >
             <p className="text-sm text-center my-3">
               Already have an account? 

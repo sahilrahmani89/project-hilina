@@ -11,7 +11,40 @@ export const authOptions={
             async authorize(credentials){
                 console.log('authorize boom baam')
                 console.log('credentials',credentials)
-                return null
+                const res = await fetch('/api/auth/login',{
+                    method:'POST',
+                    body:JSON.stringify({
+                      username:credentials?.email,
+                      password:credentials?.password
+                    }),
+                    headers: { "Content-Type": "application/json" }
+                })
+                const user = await res.json()
+                if (user?.ok && user) {
+                    const profileRes = await fetch('/api/auth/profile', {
+                        method: 'GET',
+                        headers: { 
+                            'Authorization': `Bearer ${user.token}`
+                        },
+                    });
+                    const profile = await profileRes.json();
+                    // Check if profile is valid
+                    if (profile?.ok && profile) {
+                        // Combine user data and profile data, including the token
+                        return {
+                            id: user.user_id,
+                            email: user.email,
+                            name: profile.name, 
+                            role: profile.role, 
+                            token: user.token, 
+                        };
+                    } else {
+                        // If profile fetching fails, throw an error
+                        throw new Error(profile?.message || 'Unable to fetch user profile');
+                    }
+                  } else {
+                    throw new Error(user?.message || 'Authentication failed'); 
+                }
             }
        })
     ],
