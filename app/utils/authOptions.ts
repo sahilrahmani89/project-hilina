@@ -28,6 +28,7 @@ export const authOptions={
                         },
                     });
                     const profile = await profileRes.json();
+                    console.log('profilleee',profile)
                     // Check if profile is valid
                     if (profile?.ok && profile) {
                         // Combine user data and profile data, including the token

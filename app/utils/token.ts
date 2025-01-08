@@ -1,9 +1,12 @@
-import jwt from 'jsonwebtoken';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const JWT_SECRET = process.env.JWT_SECRET;
+interface DecodedToken extends JwtPayload {
+    id: string;
+  }
 
 // Function to validate JWT token
-export const validateToken = (token: string) => {
+export const validateToken = (token: string): DecodedToken | null  => {
     try {
         if (!token) {
             throw new Error('No token provided');
@@ -11,7 +14,7 @@ export const validateToken = (token: string) => {
 
         // Verify the token using your secret
         if(JWT_SECRET){
-        const decoded = jwt.verify(token, JWT_SECRET!);
+        const decoded = jwt.verify(token, JWT_SECRET!)  as DecodedToken;
         return decoded;
 
         }

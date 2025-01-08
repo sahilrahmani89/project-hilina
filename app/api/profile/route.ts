@@ -1,23 +1,44 @@
+import Profile from "@/app/model/Profile";
+import { createApiResponse } from "@/app/utils/apiResponse";
+import { validateToken } from "@/app/utils/token";
 import { NextRequest } from "next/server";
 
 export default async function GET(request:NextRequest){
     try{
-      const body = await request.json()
-    //   const {token}
-    // const token = req.headers.authorization?.split(' ')[1]; // Assuming token is passed as 'Bearer <token>'
-
+  
+      const authorizationHeader = request.headers.get('Authorization'); // Use `.get()` for accessing headers
+      if (!authorizationHeader) {
+        throw new Error('Authorization header is missing');
+      }
+  
+      // Split to get the token
+      const token = authorizationHeader.split(' ')[1];
     // Validate the token
-    // const decoded = validateToken(token);
+    const decoded = validateToken(token);
+    const userId = decoded?.id; 
+    if(!userId){
+       throw new Error('Eww')
+    }
+    const userProfile = await getProfile(userId);
 
-    // If token is valid, you can access the user data from decoded
-    // const userId = decoded.id; // This is the user_id that was encoded in the token
-
-    // Now you can fetch the user's profile data from your database
-    // For example, you could do:
-    // const userProfile = await getUserProfileFromDb(userId);
-
+    if (!userProfile) {
+      throw new Error("Profile not found for the given userId");
+    }
+    return new Response(JSON.stringify(createApiResponse(200,'User create Successfully',userProfile)))
     }
     catch(err){
         console.log('err',err)
     }
+}
+
+const getProfile = async(id:string) =>{
+  try{
+    const profile = await Profile.findOne({ user: id}).exec();
+    if (!profile) {
+      return null;
+    }
+    return profile.toObject(); 
+  }catch(err){
+      return null
+  }
 }

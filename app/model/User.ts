@@ -7,8 +7,8 @@ const UserSchema = new Schema({
     email: { type: String, required: true }, 
     password: { type: String, required: true }, 
     profile: {
-        phone: { type: String },
-        age: { type: Number },
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'Profile'  
     }
 });
 
