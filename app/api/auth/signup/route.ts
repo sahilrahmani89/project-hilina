@@ -3,6 +3,7 @@ import Users from "@/app/model/User";
 import { createApiResponse } from "@/app/utils/apiResponse";
 import { NextRequest } from "next/server";
 import bcrypt from 'bcrypt'
+import Profile from "@/app/model/Profile";
 
 export async function POST(req:NextRequest){
     const body = await req.json()
@@ -17,19 +18,29 @@ export async function POST(req:NextRequest){
     if(isUser) return new Response(JSON.stringify(createApiResponse(409,'Email Id Alredy Exist')))
     const hashedPassword = await bcrypt.hash(password, 10);
     try{
-        const newUser = await new Users({
-            email,
-            name,
-            password:hashedPassword,
-            profile:{
-                phone:null,
-                age:null
-            }
-        })
-        const response = await newUser.save()
-        const {password,...result} = response.toObject()
-        return new Response(JSON.stringify(createApiResponse(200,'User create Successfully')))
+    //Create the User and associate the Profile
+    const newUser = new Users({
+        email,
+        name,
+        password: hashedPassword,
+      // Associate the created Profile with the User
+    });
+    // Save the user
+    const response = await newUser.save();
+    //Create a Profile for the user
+        const newProfile = await Profile.create({
+          user_id: response.user_id,
+          phone: null,
+          age: null,
+          address: null,
+          name: name,
+          email: response.email
+        });
+    // Remove the password field before sending the response
+    const { password, ...result } = response.toObject();
+        return new Response(JSON.stringify(createApiResponse(200,'User create Successfully',result)))
     }catch(err){
-        return new Response(JSON.stringify(createApiResponse(500,'Something went wrong while creating User')))
+        console.log('err',err)
+        return new Response(JSON.stringify(createApiResponse(500,'Something went wrong while creating User',err)))
     }
 }

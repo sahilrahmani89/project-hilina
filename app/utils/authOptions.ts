@@ -1,4 +1,7 @@
 import  CredentialsProvider  from 'next-auth/providers/credentials'
+import axios from 'axios'
+import { pages } from 'next/dist/build/templates/app-page';
+import { sign } from 'crypto';
 
 export const authOptions={
     providers:[
@@ -8,43 +11,41 @@ export const authOptions={
                 email:{label:'Email',type:'Email',placeholder:'Your Email'},
                 password:{label:'Password',type:'Password'}
             },
-            async authorize(credentials){
-                console.log('authorize boom baam')
-                console.log('credentials',credentials)
-                const res = await fetch('/api/auth/login',{
-                    method:'POST',
-                    body:JSON.stringify({
-                      username:credentials?.email,
+            async authorize(credentials:any){
+                function extractProtocolAndDomain(url:URL) {
+                    const parsedUrl = new URL(url);
+                    const domain = parsedUrl.hostname;
+                    const port = parsedUrl.port ? `:${parsedUrl.port}` : ''; // Include port if available
+                    return `${parsedUrl.protocol}//${domain}${port}/`;
+                }
+                let url = extractProtocolAndDomain(credentials?.callbackUrl)
+                const res = await axios.post(`${url}api/auth/login`,{
+                      email:credentials?.username,
                       password:credentials?.password
-                    }),
-                    headers: { "Content-Type": "application/json" }
-                })
-                const user = await res.json()
-                if (user?.ok && user) {
-                    const profileRes = await fetch('/api/auth/profile', {
-                        method: 'GET',
+                })                   
+                const users = res.data
+                if (users?.statusCode >=200 && users?.statusCode<=300) {
+                    const profileRes = await axios.get(`${url}api/profile`, {
                         headers: { 
-                            'Authorization': `Bearer ${user.token}`
+                            'Authorization': `Bearer ${users.data.key}`
                         },
                     });
-                    const profile = await profileRes.json();
-                    console.log('profilleee',profile)
+                    const profile = await profileRes.data;
                     // Check if profile is valid
-                    if (profile?.ok && profile) {
+                    if (profile?.email === users.email) {
                         // Combine user data and profile data, including the token
-                        return {
-                            id: user.user_id,
-                            email: user.email,
-                            name: profile.name, 
-                            role: profile.role, 
-                            token: user.token, 
-                        };
+                        let user = {
+                            id: profile?.data?.user_id,
+                            email: profile.data.email,
+                            name: profile?.data.name, 
+                            token: users.data.key, 
+                        }
+                        return user;
                     } else {
-                        // If profile fetching fails, throw an error
                         throw new Error(profile?.message || 'Unable to fetch user profile');
                     }
                   } else {
-                    throw new Error(user?.message || 'Authentication failed'); 
+                    throw new Error(users?.message || 'Authentication failed'); 
                 }
             }
        })
@@ -65,6 +66,12 @@ export const authOptions={
             session.user.email = token.email;
             return session;
         },
+    },
+    pages:{
+        signIn:'/login',
+        signOut:'/',
+        error:'/error',
+        newUser:'/signup'
     },
     secret:process.env.NEXTAUTH_SECRET,
 }

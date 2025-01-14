@@ -1,21 +1,46 @@
-// models/Profile.js
 import mongoose, { Schema } from "mongoose";
 
 const profileSchema = new Schema({
-    user: { 
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Users', 
-        required: true 
+    user_id: { 
+        type: String, 
+        required: true,
     },
-    phone: { type: String },
-    age: { type: Number },
-    profilePicture: { type: String },
-    address: { type: String },
-    bio: { type: String },
+    phone: { 
+        type: String, 
+        default: null // Default to null if not provided
+    },
+    age: { 
+        type: Number, 
+        default: null 
+    },
+    profilePicture: { 
+        type: String, 
+        default: 'defaultProfilePic.jpg'  
+    },
+    address: { 
+        type: String, 
+        trim: true 
+    },
+    bio: { 
+        type: String, 
+        trim: true,  
+        default: 'This user has no bio yet.'  
+    },
+    name: { 
+        type: String, 
+        required: true, 
+        trim: true 
+    },
+    email: {
+        type: String,
+        required: true,
+        trim: true
+    }
 }, {
-    timestamps: true,  
+    timestamps: true,
 });
 
 const Profile = mongoose.models.Profile || mongoose.model('Profile', profileSchema);
+
 
 export default Profile;

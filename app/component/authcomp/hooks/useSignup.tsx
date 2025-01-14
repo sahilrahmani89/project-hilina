@@ -23,12 +23,13 @@ const useSignup = () =>{
     setError('');
     let {cnfPassword,...params} = signCred
     try{
-        const res = await axios.post('/api/auth/signup',{...params})
-        if(res.status>=200 && res.status<=301){
+        const response = await axios.post('/api/auth/signup',{...params})
+        const res = response.data
+        console.log('res',res)
+        if(res.statusCode>=200 && res.statusCode<=300){
             router.push('/login')
         }  
     }catch(err){
-      console.log('err',err)
       setFormError((err as Error).message)
       setsignCred({
         name: '',
