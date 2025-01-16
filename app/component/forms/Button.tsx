@@ -3,7 +3,7 @@ import React from 'react';
 interface ButtonProps {
   variant?: 'filled' | 'outlined';
   children: React.ReactNode;
-  onClick?: () => void;
+  onClick?: (e:any) => void;
   className?: string;
   disabled?: boolean; 
   loading?: boolean; 

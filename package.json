@@ -14,8 +14,10 @@
     "bcrypt": "^5.1.1",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.7.1",
+    "nanoid": "^5.0.9",
     "next": "14.2.14",
     "next-auth": "^4.24.8",
+    "nodemailer": "^6.9.16",
     "react": "^18",
     "react-dom": "^18"
   },
@@ -23,6 +25,7 @@
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^20",
+    "@types/nodemailer": "^6.4.17",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",

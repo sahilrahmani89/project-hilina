@@ -9,7 +9,7 @@ const LayoutContext = createContext({hideNavbarFooter:false})
 export const LayoutProvider = ({children}:{children:any}) =>{
     const pathname = usePathname();
     //
-    const paths = ['/login','/signup']
+    const paths = ['/login','/signup','/forgot-password','/reset-password']
     //
     const hideNavbarFooter = useMemo(()=>{
         return paths.includes(pathname)
