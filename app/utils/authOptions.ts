@@ -1,7 +1,5 @@
 import  CredentialsProvider  from 'next-auth/providers/credentials'
 import axios from 'axios'
-import { pages } from 'next/dist/build/templates/app-page';
-import { sign } from 'crypto';
 
 export const authOptions={
     providers:[
@@ -66,9 +64,12 @@ export const authOptions={
             session.user.email = token.email;
             return session;
         },
+        async signIn(params:any){
+            return true
+        }
     },
     pages:{
-        signIn:'/login',
+        signIn:"/login",
         signOut:'/',
         error:'/error',
         newUser:'/signup'
