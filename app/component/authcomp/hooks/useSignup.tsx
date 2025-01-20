@@ -10,6 +10,7 @@ const useSignup = () =>{
       password:'',
       cnfPassword:''
   })
+  const [loading,setloading] = useState(false)
   const router = useRouter()
   const [error, setError] = useState<string>('');
   const [formError,setFormError] = useState('')
@@ -22,10 +23,11 @@ const useSignup = () =>{
     }
     setError('');
     let {cnfPassword,...params} = signCred
+    setloading(true)
     try{
         const response = await axios.post('/api/auth/signup',{...params})
         const res = response.data
-        console.log('res',res)
+        setloading(false)
         if(res.statusCode>=200 && res.statusCode<=300){
             router.push('/login')
         }  
@@ -37,6 +39,7 @@ const useSignup = () =>{
         password: '',
         cnfPassword: ''
       });
+      setloading(false)
       setTimeout(() => {
         setFormError('')
       }, 4000);
@@ -58,6 +61,7 @@ const useSignup = () =>{
     handleSubmit,
     error,
     formError,
+    loading,
   }
 }
 

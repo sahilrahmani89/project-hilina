@@ -3,6 +3,7 @@ import React from 'react';
 import Input from '../forms/Input';
 import Button from '../forms/Button';
 import useForgotPass from './hooks/useForgotPass';
+import Alert, {useAlert} from '../alert/Alert';
 
 const ForgotPass = () => {
   const {
@@ -19,8 +20,11 @@ const ForgotPass = () => {
     handlePasswordSubmit,
     confirmPassword,
     setConfirmPassword,
-  } = useForgotPass();
+    loading,
+  } = useForgotPass({useAlert});
   return (
+    <>
+    <Alert />
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-center mb-4">
@@ -41,7 +45,9 @@ const ForgotPass = () => {
                 required
               />
             </div>
-            <Button onClick={(e)=>handleEmailSubmit(e)}>
+            <Button 
+             loading={loading}
+             onClick={(e)=>handleEmailSubmit(e)}>
               Send OTP
             </Button>
           </form>
@@ -62,7 +68,9 @@ const ForgotPass = () => {
                 required
               />
             </div>
-            <Button>
+            <Button 
+             loading={loading}
+            >
               Verify OTP
             </Button>
           </form>
@@ -95,6 +103,7 @@ const ForgotPass = () => {
               />
             </div>
             <Button
+             loading={loading}
             >
               Reset Password
             </Button>
@@ -104,6 +113,7 @@ const ForgotPass = () => {
         )}
       </div>
     </div>
+    </>
   );
 };
 

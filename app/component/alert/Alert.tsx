@@ -58,6 +58,7 @@ const Alert: React.FC = () => {
     </div>
   );
 };
+/// having issue for first time triggerAlert is undefined
 
 export const useAlert = () => triggerAlert;
 

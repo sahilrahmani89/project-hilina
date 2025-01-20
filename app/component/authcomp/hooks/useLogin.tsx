@@ -2,14 +2,14 @@
 import { ChangeEvent, useState } from "react"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation";
-import { alert } from "@/app/reuse-type/alert.type";
+
 
 const useLogin = ({useAlert}:{useAlert:any}) =>{
     const triggerAlert = useAlert()
     const [cred,setcred] = useState({email:'',password:''})
     const [loginError,setloginError] = useState('')
+    const [loading,setloading] = useState(false)
     const router = useRouter()
-    const [alert,setalert] = useState<alert>({isAlert:false,message:'',type:''})
     const loginOnChange = (e:ChangeEvent<HTMLInputElement>)=>{
         const {name,value} = e.target || {}
         setcred((prev)=>{
@@ -21,6 +21,7 @@ const useLogin = ({useAlert}:{useAlert:any}) =>{
     }
     const handleSubmit = async(e:any)=>{
         e.preventDefault();
+        setloading(true)
         console.log('hhffhfj')
         try{
             const res = await signIn( "credentials",{
@@ -28,6 +29,7 @@ const useLogin = ({useAlert}:{useAlert:any}) =>{
                 username:cred?.email,
                 password:cred?.password
             })
+            setloading(false)
             if(res?.error){
               triggerAlert(res?.error, "danger")
             //   setloginError('Authentication Failed')
@@ -41,6 +43,7 @@ const useLogin = ({useAlert}:{useAlert:any}) =>{
             setTimeout(() => {
                 setloginError('')
             }, 4000);
+            setloading(false)
         }
     }
     return{
@@ -48,7 +51,7 @@ const useLogin = ({useAlert}:{useAlert:any}) =>{
         cred,
         loginOnChange,
         loginError,
-        alert,
+        loading,
     }
 }
 export default useLogin

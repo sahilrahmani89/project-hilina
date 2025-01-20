@@ -14,7 +14,7 @@ const Login = () => {
     handleSubmit, 
     loginOnChange,
     loginError,
-    alert,
+    loading,
    } = useLogin({ useAlert })
   return (
     <>
@@ -59,6 +59,7 @@ const Login = () => {
               />
             </div>
             <Button
+              loading={loading}
             >
               Login
             </Button>
@@ -71,8 +72,8 @@ const Login = () => {
               Don't have an account? <Link href="/signup" className="text-[#f9e136] hover:underline font-bold text-[18px]">Sign up</Link>
             </p>
             <p className='py-2'>
-                Forgot password ? <Link href={"/forgot-password"} className=''>
-                   Click Here
+                Forgot password ? <Link href={"/forgot-password"} className='text-blue-600'>
+                    Click Here
                 </Link>
             </p>
           </div>

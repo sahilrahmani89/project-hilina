@@ -2,10 +2,14 @@
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
+import { Status} from "./reuse-type/status.type";
+import Button from "./component/forms/Button";
 
 
 export default function Home() {
- const {data:activeSession} = useSession();
+ const {data:activeSession,status} = useSession();
+ let currentStatus:Status = status
+ console.log('currentStatus',currentStatus)
  console.log('session',activeSession)
  async function logout(){
     await signOut({callbackUrl:'/login',redirect:true})
@@ -14,9 +18,14 @@ export default function Home() {
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         {
-          activeSession ? <button onClick={logout}>
+          activeSession ? <Button onClick={logout} loading={currentStatus === 'loading'}>
                 Logout
-          </button> :  <Link href={'/login'}>Login </Link>
+          </Button> :  <Link href={'/login'}>Login </Link>
+        }
+        {
+          currentStatus==='loading' && <Button loading={currentStatus === 'loading'}>
+            Bppm
+          </Button>
         }
         <Image
           className="dark:invert"

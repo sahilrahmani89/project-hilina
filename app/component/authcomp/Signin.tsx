@@ -13,7 +13,8 @@ const Signin = () => {
     handleOnChange,
     handleSubmit,
     signCred,
-    formError
+    formError,
+    loading,
   } = useSignup()
   return (
   <div className="flex flex-col h-screen md:flex-row">
@@ -80,7 +81,7 @@ const Signin = () => {
             />
           </div>
           
-          <Button>
+          <Button loading={loading}>
               Signup
           </Button>
         </form>
