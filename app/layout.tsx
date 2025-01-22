@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { LayoutProvider } from "./providers/LayoutProviders";
 import { SessionProviders } from "./providers/SessionProvider";
+import AlertProvider from "./providers/Alert";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,7 +33,9 @@ export default function RootLayout({
       >
       <SessionProviders>
        <LayoutProvider>
-        {children}
+        <AlertProvider>
+         {children}
+        </AlertProvider>
         </LayoutProvider>
         </SessionProviders>
       </body>

@@ -2,10 +2,12 @@
 import { ChangeEvent, useState } from "react"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation";
+import { useAlert } from "../../../providers/Alert";
 
 
-const useLogin = ({useAlert}:{useAlert:any}) =>{
+const useLogin = () =>{
     const triggerAlert = useAlert()
+    console.log('triggerAlert',triggerAlert)
     const [cred,setcred] = useState({email:'',password:''})
     const [loginError,setloginError] = useState('')
     const [loading,setloading] = useState(false)

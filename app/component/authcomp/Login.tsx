@@ -6,7 +6,6 @@ import useLogin from './hooks/useLogin';
 import Button from '../forms/Button';
 import SignInWithGoogle from './SignInWithGoogle';
 import Link from 'next/link';
-import Alert, {useAlert} from '../alert/Alert';
 
 const Login = () => {
   const { 
@@ -15,10 +14,10 @@ const Login = () => {
     loginOnChange,
     loginError,
     loading,
-   } = useLogin({ useAlert })
+   } = useLogin()
   return (
     <>
-    <Alert/> 
+    {/* <Alert/>  */}
     <div className="flex flex-col h-screen md:flex-row">
       <div className="relative md:w-1/2 w-full  md:h-full">
         <Image

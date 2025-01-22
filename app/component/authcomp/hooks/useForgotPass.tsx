@@ -1,8 +1,9 @@
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useAlert } from "../../../providers/Alert";
 
-const useForgotPass = ({useAlert}:{useAlert:any}) => {
+const useForgotPass = () => {
   const triggerAlert = useAlert()
   console.log('triggerAlert',triggerAlert)
   const router = useRouter();
@@ -16,6 +17,10 @@ const useForgotPass = ({useAlert}:{useAlert:any}) => {
   
   const handleEmailSubmit = async(e:any) => {
     e.preventDefault();
+    if(!email)  {
+      triggerAlert('Fill your email', 'warning') 
+      return
+    }
     const response:any= await getAPI(email)
     console.log('response',response)
     if(response?.data?.statusCode >=200 && response?.data?.statusCode<=299){

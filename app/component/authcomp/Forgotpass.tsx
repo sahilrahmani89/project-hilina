@@ -3,7 +3,7 @@ import React from 'react';
 import Input from '../forms/Input';
 import Button from '../forms/Button';
 import useForgotPass from './hooks/useForgotPass';
-import Alert, {useAlert} from '../alert/Alert';
+
 
 const ForgotPass = () => {
   const {
@@ -21,10 +21,10 @@ const ForgotPass = () => {
     confirmPassword,
     setConfirmPassword,
     loading,
-  } = useForgotPass({useAlert});
+  } = useForgotPass();
   return (
     <>
-    <Alert />
+    {/* <Alert /> */}
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-center mb-4">
