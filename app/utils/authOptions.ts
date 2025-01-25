@@ -37,6 +37,8 @@ export const authOptions={
                             email: profile.data.email,
                             name: profile?.data.name, 
                             token: users.data.key, 
+                            role:profile?.data.role ?? 'user',
+                            access_token:users.data.key
                         }
                         return user;
                     } else {
@@ -48,20 +50,23 @@ export const authOptions={
             }
        })
     ],
-    session:{
-        strategy:'jwt' as const
-    },
+    // session: { strategy:'any'},
     callbacks:{
         async jwt({token,user}:{token:any,user:any}){
             if(user){
                 token.id = user.id
                 token.email = user.email
+                token.role = user.role
+                token.fullName= user.name
+                token.access_token = user.access_token
             }
             return token
         },
         async session({session,token}:{session:any,token:any}){
             session.user.id = token.id;
             session.user.email = token.email;
+            session.user.role = token?.role;
+            session.access_token = token.access_token
             return session;
         },
         async signIn(params:any){
@@ -70,9 +75,9 @@ export const authOptions={
     },
     pages:{
         signIn:"/login",
-        signOut:'/',
-        error:'/error',
-        newUser:'/signup'
+        // signOut:'/',
+        // error:'/error',
+        // newUser:'/signup'
     },
     secret:process.env.NEXTAUTH_SECRET,
 }

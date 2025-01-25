@@ -7,7 +7,6 @@ import { useAlert } from "../../../providers/Alert";
 
 const useLogin = () =>{
     const triggerAlert = useAlert()
-    console.log('triggerAlert',triggerAlert)
     const [cred,setcred] = useState({email:'',password:''})
     const [loginError,setloginError] = useState('')
     const [loading,setloading] = useState(false)

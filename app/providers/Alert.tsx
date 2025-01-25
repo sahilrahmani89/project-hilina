@@ -18,7 +18,7 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     const timeout = setTimeout(() => {
       setAlert(null);
-    }, 5000);
+    }, 2000);
 
     return () => clearTimeout(timeout);
   }, []);
@@ -56,7 +56,6 @@ export const AlertProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
 // Hook to use the alert context
 export const useAlert = () => {
-  console.log('useAler boom')
   const context = useContext(AlertContext);
   if (!context) {
     throw new Error("useAlert must be used within an AlertProvider");

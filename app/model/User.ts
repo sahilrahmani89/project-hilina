@@ -6,10 +6,7 @@ const UserSchema = new Schema({
     name: { type: String, required: true }, 
     email: { type: String, required: true }, 
     password: { type: String, required: true }, 
-    profile: {
-        type: mongoose.Schema.Types.ObjectId, 
-        ref: 'Profile'  
-    }
+    role:{type:String,default:'user'}
 });
 
 // Pre-save hook to increment user_id

@@ -1,4 +1,5 @@
 "use client"
+import { useAlert } from "@/app/providers/Alert";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
@@ -14,11 +15,13 @@ const useSignup = () =>{
   const router = useRouter()
   const [error, setError] = useState<string>('');
   const [formError,setFormError] = useState('')
+  const triggerAlert = useAlert()
   const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
     // Basic validation for matching passwords
     if (signCred?.password !== signCred?.cnfPassword) {
-      setError('Passwords do not match');
+      triggerAlert('Passwords do not match','warning')
+      // setError('Passwords do not match');
       return;
     }
     setError('');
@@ -29,10 +32,12 @@ const useSignup = () =>{
         const res = response.data
         setloading(false)
         if(res.statusCode>=200 && res.statusCode<=300){
+            triggerAlert('Sign up successfull','success')
             router.push('/login')
         }  
     }catch(err){
-      setFormError((err as Error).message)
+      triggerAlert((err as Error).message ?? 'Something went wrong','danger')
+      // setFormError((err as Error).message)
       setsignCred({
         name: '',
         email: '',

@@ -5,28 +5,26 @@ import Link from "next/link";
 import { Status} from "./reuse-type/status.type";
 import Button from "./component/forms/Button";
 
+const isLocal = process.env.NODE_ENV? process.env.NODE_ENV==='development':''
 
 export default function Home() {
- const {data:activeSession,status} = useSession();
- let currentStatus:Status = status
- console.log('currentStatus',currentStatus)
- console.log('session',activeSession)
- async function logout(){
-    await signOut({callbackUrl:'/login',redirect:true})
- }
+  const {data:activeSession,status} = useSession();
+  let currentStatus:Status = status
+  async function logout() {
+    await signOut({ callbackUrl: '/login', redirect: true }); 
+  }
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         {
           activeSession ? <Button onClick={logout} loading={currentStatus === 'loading'}>
                 Logout
-          </Button> :  <Link href={'/login'}>Login </Link>
+          </Button> : 
+               <Link href={'/login'} className="w-full">
+                  <Button loading={currentStatus === 'loading'}>Login</Button>
+               </Link>
         }
-        {
-          currentStatus==='loading' && <Button loading={currentStatus === 'loading'}>
-            Bppm
-          </Button>
-        }
+        
         <Image
           className="dark:invert"
           src="https://nextjs.org/icons/next.svg"

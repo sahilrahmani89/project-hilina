@@ -19,10 +19,12 @@ export async function POST(req:NextRequest){
     const hashedPassword = await bcrypt.hash(password, 10);
     try{
     //Create the User and associate the Profile
+    let role = email.toLowercase()==='mountreev@gmail.com'? 'admin': 'user'
     const newUser = new Users({
         email,
         name,
         password: hashedPassword,
+        role,
       // Associate the created Profile with the User
     });
     // Save the user
@@ -34,7 +36,8 @@ export async function POST(req:NextRequest){
           age: null,
           address: null,
           name: name,
-          email: response.email
+          email: response.email,
+          role,
         });
     // Remove the password field before sending the response
     const { password, ...result } = response.toObject();

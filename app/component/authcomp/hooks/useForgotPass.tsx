@@ -2,10 +2,11 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAlert } from "../../../providers/Alert";
+import { useSession } from "next-auth/react";
+import HttpService from "@/app/service/Http.service";
 
 const useForgotPass = () => {
   const triggerAlert = useAlert()
-  console.log('triggerAlert',triggerAlert)
   const router = useRouter();
   const [step, setStep] = useState(1); // Step 1: Email, Step 2: OTP, Step 3: Reset Password
   const [email, setEmail] = useState('');
@@ -22,7 +23,7 @@ const useForgotPass = () => {
       return
     }
     const response:any= await getAPI(email)
-    console.log('response',response)
+    // console.log('response',response)
     if(response?.data?.statusCode >=200 && response?.data?.statusCode<=299){
        triggerAlert(response?.data?.message ?? 'Otp has been sent to your email', 'success')
        setStep(2); 
@@ -35,6 +36,7 @@ const useForgotPass = () => {
   const getAPI = async (email:string) => {
     setloading(true)
     try{
+        
         const res = await axios.post('/api/auth/getOtp',{
           email,
         })
@@ -49,7 +51,12 @@ const useForgotPass = () => {
   //get otp from server 
   const verifyOTP = async (email:string) => {
     setloading(true)
+    if(!otp) {
+      triggerAlert('Fill otp','warning')
+      return
+    }
     try{
+        
         const res = await axios.post('/api/auth/verifyOtp',{
           email,
           otp
@@ -66,7 +73,7 @@ const useForgotPass = () => {
   const handleOtpSubmit = async(e:any) => {
     e.preventDefault();
     // Simulate OTP validation
-    const serverOtp = await verifyOTP(email)
+    const serverOtp:any = await verifyOTP(email)
     if(serverOtp?.data?.statusCode >=200 && serverOtp?.data?.statusCode<=299){
     triggerAlert(serverOtp?.data?.message ?? 'Otp has been verified', 'success')
 

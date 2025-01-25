@@ -2,7 +2,7 @@ import dbConnect from "@/app/lib/mongoose";
 import Otp from "@/app/model/Otp";
 import Users from "@/app/model/User";
 import { createApiResponse } from "@/app/utils/apiResponse";
-import { customAlphabet, nanoid } from "nanoid";
+import { generateSecureInteger } from "@/app/utils/common";
 import { NextRequest } from "next/server";
 import nodemailer from 'nodemailer';
 
@@ -71,8 +71,4 @@ export async function POST(req:NextRequest){
         console.log('err',err)
         return new Response(JSON.stringify(createApiResponse(500,'Interval Server Error Otp')))
     }
-}
-export function generateSecureInteger(length = 10) {
-    const nanoid = customAlphabet('1234567890', length)
-    return nanoid(6)
 }
