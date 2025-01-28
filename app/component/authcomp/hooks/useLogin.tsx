@@ -3,6 +3,7 @@ import { ChangeEvent, useState } from "react"
 import { signIn } from "next-auth/react"
 import { useRouter } from "next/navigation";
 import { useAlert } from "../../../providers/Alert";
+import axios from "axios";
 
 
 const useLogin = () =>{
@@ -25,19 +26,31 @@ const useLogin = () =>{
         setloading(true)
         console.log('hhffhfj')
         try{
-            const res = await signIn( "credentials",{
-                redirect:false,
-                username:cred?.email,
+            const response = await axios.post(`/api/auth/login`,{
+                email:cred?.email,
                 password:cred?.password
-            })
-            setloading(false)
-            if(res?.error){
-              triggerAlert(res?.error, "danger")
-            //   setloginError('Authentication Failed')
-            }else{
-                triggerAlert("Login successfull", "success")
-                router.push('/')
-            }
+            }) 
+            const userLoginData = response?.data
+            console.warn('userLoginData',userLoginData)
+            const expiry = Date.now() + 10 * 60 * 1000; // 10 minutes
+            localStorage.setItem('accessToken', userLoginData.data.accessToken);
+            localStorage.setItem('tokenExpiry', expiry.toString());
+            if(userLoginData.statusCode>=200 && userLoginData.statusCode<300){
+                const res = await signIn( "credentials",{
+                    redirect:false,
+                    username:cred?.email,
+                    password:cred?.password,
+                    accessToken:userLoginData.data.accessToken
+                })
+                setloading(false)
+                if(res?.error){
+                triggerAlert(res?.error, "danger")
+                //   setloginError('Authentication Failed')
+                }else{
+                    triggerAlert("Login successfull", "success")
+                    router.push('/')
+                }
+           }
         }catch(err){
             setloginError((err as Error).message)
             triggerAlert((err as Error).message, "danger")

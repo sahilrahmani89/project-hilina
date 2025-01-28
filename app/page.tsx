@@ -5,8 +5,6 @@ import Link from "next/link";
 import { Status} from "./reuse-type/status.type";
 import Button from "./component/forms/Button";
 
-const isLocal = process.env.NODE_ENV? process.env.NODE_ENV==='development':''
-
 export default function Home() {
   const {data:activeSession,status} = useSession();
   let currentStatus:Status = status

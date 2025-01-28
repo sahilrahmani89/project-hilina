@@ -4,6 +4,7 @@ import "./globals.css";
 import { LayoutProvider } from "./providers/LayoutProviders";
 import { SessionProviders } from "./providers/SessionProvider";
 import AlertProvider from "./providers/Alert";
+import { AccessTokenProvider } from "./providers/AccessTokenProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -32,11 +33,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
       <SessionProviders>
-       <LayoutProvider>
-        <AlertProvider>
-         {children}
-        </AlertProvider>
-        </LayoutProvider>
+       <AccessTokenProvider>
+        <LayoutProvider>
+          <AlertProvider>
+          {children}
+          </AlertProvider>
+          </LayoutProvider>
+        </AccessTokenProvider>
         </SessionProviders>
       </body>
     </html>

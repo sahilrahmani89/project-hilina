@@ -11,6 +11,7 @@ export async function GET(request: NextRequest) {
     }
     // Split to get the token
     const token = authorizationHeader.split(' ')[1];
+    console.log('tokejn in profile api',token)
     // Validate the token
     const decoded = validateToken(token);
     const userId = decoded?.id;
@@ -22,7 +23,7 @@ export async function GET(request: NextRequest) {
     if (!userProfile) {
       return new Response(JSON.stringify(createApiResponse(404, 'Profile not found for the given userId')))
     }
-    return new Response(JSON.stringify(createApiResponse(200, 'User create Successfully', userProfile)))
+    return new Response(JSON.stringify(createApiResponse(200, 'Profile', userProfile)))
   }
   catch (err) {
     console.log('err', err)

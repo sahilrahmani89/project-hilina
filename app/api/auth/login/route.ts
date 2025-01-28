@@ -1,14 +1,16 @@
 import Users from "@/app/model/User";
 import { createApiResponse } from "@/app/utils/apiResponse";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 import dbConnect from "@/app/lib/mongoose";
+import { serialize } from 'cookie';
+import { generateAccessToken, generateRefreshToken } from "@/app/service/auth.service";
 
 const JWT_SECRET = process.env.JWT_SECRET
 
 
-export async function POST(req:NextRequest){
+export async function POST(req:NextRequest,res:NextResponse){
     const body = await req.json()
     const {email, password}= body
     if(!email || !password) return new Response(
@@ -23,13 +25,20 @@ export async function POST(req:NextRequest){
     try{
         const matchPassword = await bcrypt.compare(password,isExist.password!)
         if(matchPassword){
-            const token = jwt.sign({ id: isExist.user_id, email: isExist.email }, JWT_SECRET, {
-                expiresIn: '1h', // Token expiration time
-            });
+            const  refreshToken = generateRefreshToken(isExist.user_id,isExist.email)
+            const accessToken = generateAccessToken(refreshToken)
             const tokens = {
-                "key":token
+                accessToken
             }
-            return new Response(JSON.stringify(createApiResponse(200,"Yippe",tokens)))
+            console.log('token while getting token',tokens)
+            const response = NextResponse.json(createApiResponse(200,"Yippe",tokens));
+            response.cookies.set('refreshToken', refreshToken, {
+                httpOnly: true,
+                secure: process.env?.NODE_ENV !== 'production', // change this production  ===
+                path: '/',
+                maxAge: 30 * 24 * 60 * 60, 
+            });
+            return response;
         }else{
             return new Response(JSON.stringify(createApiResponse(400,"Password does not match")))
         }
