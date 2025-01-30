@@ -15,6 +15,7 @@ class HttpService {
     this.axiosInstance.interceptors.request.use(
       (config: any) => {
         const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+        console.log('token here',token)
         if (token) {
           config.headers = {
             ...config.headers,

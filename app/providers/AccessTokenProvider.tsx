@@ -17,9 +17,10 @@ export const AccessTokenProvider = ({ children }: { children: ReactNode }) => {
         const now = Date.now();
 
         if (!tokenExpiry || now >= parseInt(tokenExpiry, 10)) {
-          const response:any = await httpService.get('/api/auth/refresh');
-          const { accessToken } = response.data;
-
+          const response:any = await httpService.post('/api/auth/refresh');
+          const { accessToken } = response.data.data
+          console.log('accessTOekn in Accesstoejnprovider',accessToken)
+          console.log('response for refrsh response.data',response.data)
           const expiry = now + 10 * 60 * 1000; // 
           localStorage.setItem('accessToken', accessToken);
           localStorage.setItem('tokenExpiry', expiry.toString());
