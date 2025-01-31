@@ -1,42 +1,48 @@
 "use client";
 
-import React, { createContext, useEffect, ReactNode, useContext } from 'react';
-import HttpService from '../service/Http.service';
+import React, { createContext, useEffect, ReactNode, useContext } from "react";
 import { useRouter } from "next/navigation";
+import HttpService from "../service/Http.service";
 
+interface HttpServiceContextType {
+  httpService: HttpService;
+  refreshAccessToken: () => Promise<string | null>;
+}
 
-const HttpServiceContext = createContext<HttpService | null>(null);
+const HttpServiceContext = createContext<HttpServiceContextType | null>(null);
 
 export const AccessTokenProvider = ({ children }: { children: ReactNode }) => {
   const httpService = new HttpService();
-  const router = useRouter()
-  useEffect(() => {
-    const initAuth = async () => {
-      try {
-        const tokenExpiry = localStorage.getItem('tokenExpiry');
-        const now = Date.now();
+  const router = useRouter();
 
-        if (!tokenExpiry || now >= parseInt(tokenExpiry, 10)) {
-          const response:any = await httpService.post('/api/auth/refresh');
-          const { accessToken } = response.data.data
-          console.log('accessTOekn in Accesstoejnprovider',accessToken)
-          console.log('response for refrsh response.data',response.data)
-          const expiry = now + 10 * 60 * 1000; // 
-          localStorage.setItem('accessToken', accessToken);
-          localStorage.setItem('tokenExpiry', expiry.toString());
-        }else{
-            return true
-        }
-      } catch (error) {
-            router.push('/login')
+  // Function to refresh the access token
+  const refreshAccessToken = async () => {
+    try {
+      const tokenExpiry = localStorage.getItem("tokenExpiry");
+      const now = Date.now();
+
+      if (!tokenExpiry || now >= parseInt(tokenExpiry, 50)) {
+        const response: any = await httpService.post("/api/auth/refresh");
+        const { accessToken } = response.data.data;
+        const expiry = now + 60 * 60 * 1000; // Set expiry to 1 hour from now
+        localStorage.setItem("accessToken", accessToken);
+        localStorage.setItem("tokenExpiry", expiry.toString());
+        return accessToken;
+      } else {
+        return localStorage.getItem("accessToken");
       }
-    };
+    } catch (error) {
+      router.push("/login");
+      throw new Error("Failed to refresh token, redirecting to login");
+    }
+  };
 
-    initAuth();
+  useEffect(() => {
+    refreshAccessToken(); // Try to refresh the token on mount
   }, [httpService]);
 
   return (
-    <HttpServiceContext.Provider value={httpService}>
+    <HttpServiceContext.Provider value={{ httpService, refreshAccessToken }}>
       {children}
     </HttpServiceContext.Provider>
   );
@@ -46,7 +52,7 @@ export const AccessTokenProvider = ({ children }: { children: ReactNode }) => {
 export const useHttpService = () => {
   const context = useContext(HttpServiceContext);
   if (!context) {
-    throw new Error('useHttpService must be used within AccessTokenProvider');
+    throw new Error("useHttpService must be used within AccessTokenProvider");
   }
   return context;
 };

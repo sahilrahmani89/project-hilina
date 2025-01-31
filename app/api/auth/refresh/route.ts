@@ -15,11 +15,10 @@ export async function POST(req: NextRequest) {
     // const {user_id} = body
     // if(!user_id) return new Response(JSON.stringify(createApiResponse(400,'user_id not found')))
     // // const 
-    console.dir(req,{depth:null})
+    // console.dir(req,{depth:null})
     const refreshToken:any = req.cookies.get('refreshToken');
   // const refreshToken = (req.cookies as any).refreshToken;
-  console.log('refreshToken', refreshToken);
-  console.dir(refreshToken,{depth:null})
+
   if (!refreshToken) return new Response(JSON.stringify(createApiResponse(400, 'Refresh token not found!')));
   try {
     const decode: any = validateToken(refreshToken?.value);

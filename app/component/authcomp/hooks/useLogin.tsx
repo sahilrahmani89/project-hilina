@@ -32,7 +32,7 @@ const useLogin = () =>{
             }) 
             const userLoginData = response?.data
             console.warn('userLoginData',userLoginData)
-            const expiry = Date.now() + 10 * 60 * 1000; // 10 minutes
+            const expiry = Date.now() + 60 * 60 * 1000; // 60 minutes
             localStorage.setItem('accessToken', userLoginData.data.accessToken);
             localStorage.setItem('tokenExpiry', expiry.toString());
             if(userLoginData.statusCode>=200 && userLoginData.statusCode<300){
