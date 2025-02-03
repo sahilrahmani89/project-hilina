@@ -1,3 +1,4 @@
+import dbConnect from "@/app/lib/mongoose";
 import Profile from "@/app/model/Profile";
 import { createApiResponse } from "@/app/utils/apiResponse";
 import { validateToken } from "@/app/utils/token";
@@ -10,8 +11,8 @@ export async function GET(request: NextRequest) {
       return new Response(JSON.stringify(createApiResponse(401, 'uthorization header is missing')))
     }
     // Split to get the token
+    await dbConnect()
     const token = authorizationHeader.split(' ')[1];
-    console.log('tokejn in profile api',token)
     // Validate the token
     const decoded = validateToken(token);
     const userId = decoded?.id;

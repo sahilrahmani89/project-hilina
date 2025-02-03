@@ -21,7 +21,7 @@ export const AccessTokenProvider = ({ children }: { children: ReactNode }) => {
       const tokenExpiry = localStorage.getItem("tokenExpiry");
       const now = Date.now();
 
-      if (!tokenExpiry || now >= parseInt(tokenExpiry, 50)) {
+      if (!tokenExpiry || now >= parseInt(tokenExpiry)) {
         const response: any = await httpService.post("/api/auth/refresh");
         const { accessToken } = response.data.data;
         const expiry = now + 60 * 60 * 1000; // Set expiry to 1 hour from now
