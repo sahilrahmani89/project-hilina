@@ -20,7 +20,7 @@ export async function POST(req:NextRequest,res:NextResponse){
     await dbConnect()
     const isExist = await Users.findOne({email})
     if(!isExist) return new Response(
-        JSON.stringify(createApiResponse(400,'This email Id does not exist! Please signup.'))
+        JSON.stringify(createApiResponse(400,'This email Id does not exist! Please signup.')),{status:400}
     )
     try{
         const matchPassword = await bcrypt.compare(password,isExist.password!)
@@ -64,7 +64,7 @@ export async function POST(req:NextRequest,res:NextResponse){
             });
             return response;
         }else{
-            return new Response(JSON.stringify(createApiResponse(400,"Password does not match")))
+            return new Response(JSON.stringify(createApiResponse(400,"Password does not match")),{status:400})
         }
     }catch(err){
         return new Response(JSON.stringify(createApiResponse(500,'Something went wrong while login.')))

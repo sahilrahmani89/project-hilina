@@ -30,11 +30,9 @@ const useLogin = () =>{
                 email:cred?.email,
                 password:cred?.password
             }) 
-            const userLoginData = response?.data
+            const userLoginData = await response?.data
             console.warn('userLoginData',userLoginData)
-            const expiry = Date.now() + 60 * 60 * 1000; // 60 minutes
-            localStorage.setItem('accessToken', userLoginData.data.accessToken);
-            localStorage.setItem('tokenExpiry', expiry.toString());
+            
             if(userLoginData.statusCode>=200 && userLoginData.statusCode<300){
                 const res = await signIn( "credentials",{
                     redirect:false,
@@ -42,6 +40,9 @@ const useLogin = () =>{
                     password:cred?.password,
                     accessToken:userLoginData.data.accessToken
                 })
+                const expiry = Date.now() + 60 * 60 * 1000; // 60 minutes
+                localStorage.setItem('accessToken', userLoginData.data.accessToken);
+                localStorage.setItem('tokenExpiry', expiry.toString());
                 setloading(false)
                 if(res?.error){
                 triggerAlert(res?.error, "danger")
@@ -52,8 +53,15 @@ const useLogin = () =>{
                 }
            }
         }catch(err){
+            console.log('err',err)
+            let errMsg: any;
+            if (axios.isAxiosError(err) && err.response) {
+                errMsg = err.response.data.message;
+            } else {
+                errMsg = 'An unknown error occurred';
+            }
             setloginError((err as Error).message)
-            triggerAlert((err as Error).message, "danger")
+            triggerAlert(errMsg, "danger")
             setTimeout(() => {
                 setloginError('')
             }, 4000);
