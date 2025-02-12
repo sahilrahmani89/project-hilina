@@ -1,12 +1,45 @@
 export const featuredDestinations = [
-    {
-      id: 1,
-      title: "Goa Beaches",
-      image: "/images/goa.jpg",
-      description: "Golden sands & vibrant nightlife"
-    },
-    // Add 4-6 more destinations
-  ];
+  {
+    id: 1,
+    title: "Goa Beaches",
+    slug: "goa-beaches",
+    category: "Beaches",
+    image: "https://placehold.co/600x400.png",
+    description: "Golden sands & vibrant nightlife"
+  },
+  {
+    id: 2,
+    title: "Manali Hills",
+    slug: "manali-hills",
+    category: "Mountains",
+    image: "https://placehold.co/600x400.png",
+    description: "Snow-capped peaks & adventure sports"
+  },
+  {
+    id: 3,
+    title: "Kerala Backwaters",
+    slug: "kerala-backwaters",
+    category: "Backwaters",
+    image: "https://placehold.co/600x400.png",
+    description: "Serene waters & lush greenery"
+  },
+  {
+    id: 4,
+    title: "Rajasthan Deserts",
+    slug: "rajasthan-deserts",
+    category: "Desert",
+    image: "https://placehold.co/600x400.png",
+    description: "Golden dunes & cultural heritage"
+  },
+  {
+    id: 5,
+    title: "Andaman Islands",
+    slug: "andaman-islands",
+    category: "Islands",
+    image: "https://placehold.co/600x400.png",
+    description: "Pristine beaches & marine life"
+  },
+];
   
   export const categories = [
     { id: 1, name: "Beaches", icon: "🏖️" },
@@ -19,10 +52,123 @@ export const featuredDestinations = [
     {
       id: 1,
       name: "Jaipur",
-      image: "/images/jaipur.jpg",
-      attractions: 45
+      slug: "jaipur",
+      tagline: "The Pink City of Royal Heritage",
+      image: "https://placehold.co/600x400.png",
+      attractions: 245,
+      rating: 4.8,
+      popularity: 3,
     },
-    // Add 5-7 more cities
+    {
+      id: 2,
+      name: "Varanasi",
+      slug: "varanasi",
+      tagline: "Spiritual Capital of India",
+      image: "https://placehold.co/600x400.png",
+      attractions: 182,
+      rating: 4.7,
+      popularity: 5,
+    },
+    {
+      id: 3,
+      name: "Goa",
+      slug: "goa",
+      tagline: "Tropical Beach Paradise",
+      image: "https://placehold.co/600x400.png",
+      attractions: 367,
+      rating: 4.9,
+      popularity: 2,
+    },
+    {
+      id: 4,
+      name: "Mumbai",
+      slug: "mumbai",
+      tagline: "City of Dreams & Bollywood",
+      image: "https://placehold.co/600x400.png",
+      attractions: 412,
+      rating: 4.6,
+      popularity: 1,
+    },
+    {
+      id: 5,
+      name: "Kolkata",
+      slug: "kolkata",
+      tagline: "Cultural Capital of India",
+      image: "https://placehold.co/600x400.png",
+      attractions: 298,
+      rating: 4.5,
+      popularity: 7,
+    },
+    {
+      id: 6,
+      name: "Udaipur",
+      slug: "udaipur",
+      tagline: "City of Lakes & Palaces",
+      image: "https://placehold.co/600x400.png",
+      attractions: 156,
+      rating: 4.7,
+      popularity: 9,
+    },
   ];
-  
-  // Add similar data arrays for states, testimonials
+  export const states = [
+    {
+      id: 1,
+      name: "Rajasthan",
+      slug: "rajasthan",
+      description: "Land of Kings & Majestic Forts",
+      image: "https://placehold.co/600x400.png",
+      highlights: ["Jaipur", "Udaipur", "Jaisalmer", "Pushkar"],
+      attractions: 845,
+      tag: "Heritage Capital",
+    },
+    {
+      id: 2,
+      name: "Kerala",
+      slug: "kerala",
+      description: "God's Own Country - Backwaters & Beaches",
+      image: "https://placehold.co/600x400.png",
+      highlights: ["Alleppey", "Munnar", "Kochi", "Varkala"],
+      attractions: 921,
+      tag: "Tropical Paradise",
+    },
+    {
+      id: 3,
+      name: "Himachal Pradesh",
+      slug: "himachal-pradesh",
+      description: "Mountain Adventures & Snow Peaks",
+      image: "https://placehold.co/600x400.png",
+      highlights: ["Manali", "Shimla", "Dharamshala", "Spiti Valley"],
+      attractions: 672,
+      tag: "Adventure Hub",
+    },
+    {
+      id: 4,
+      name: "Goa",
+      slug: "goa",
+      description: "Beach Life & Portuguese Heritage",
+      image: "https://placehold.co/600x400.png",
+      highlights: ["North Goa", "Panaji", "Dudhsagar Falls", "Old Goa"],
+      attractions: 456,
+      tag: "Beach Paradise",
+    },
+    {
+      id: 5,
+      name: "Tamil Nadu",
+      slug: "tamil-nadu",
+      description: "Temples & Cultural Heritage",
+      image: "https://placehold.co/600x400.png",
+      highlights: ["Chennai", "Madurai", "Rameswaram", "Kodaikanal"],
+      attractions: 1032,
+      tag: "Temple State",
+    },
+    {
+      id: 6,
+      name: "Uttarakhand",
+      slug: "uttarakhand",
+      description: "Spiritual Retreats & Himalayan Treks",
+      image: "https://placehold.co/600x400.png",
+      highlights: ["Rishikesh", "Haridwar", "Nainital", "Valley of Flowers"],
+      attractions: 589,
+      tag: "Devbhoomi",
+    },
+  ];
