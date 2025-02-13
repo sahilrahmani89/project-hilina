@@ -56,3 +56,10 @@ body {
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+.footer a {
+  transition: color 0.3s ease;
+}
+
+.footer button {
+  transition: background-color 0.3s ease;
+}
