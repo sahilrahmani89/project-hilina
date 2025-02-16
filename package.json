@@ -9,7 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@tabler/icons-react": "^3.19.0",
+    "@hookform/resolvers": "^4.1.0",
+    "@tabler/icons-react": "^3.30.0",
+    "@tiptap/extension-image": "^2.11.5",
+    "@tiptap/extension-placeholder": "^2.11.5",
+    "@tiptap/react": "^2.11.5",
+    "@tiptap/starter-kit": "^2.11.5",
     "axios": "^1.7.7",
     "bcrypt": "^5.1.1",
     "cookie": "^1.0.2",
@@ -20,7 +25,8 @@
     "next-auth": "^4.24.8",
     "nodemailer": "^6.9.16",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
