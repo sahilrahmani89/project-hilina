@@ -2,13 +2,14 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Editor } from '@tiptap/react'
+import { EditorContent, useEditor } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Placeholder from '@tiptap/extension-placeholder'
 import Image from '@tiptap/extension-image'
-import { useEditor } from '@tiptap/react'
-import { useState } from 'react'
-import { IconMapPin, IconPhoto, IconCategory, IconX } from '@tabler/icons-react'
+import TextStyle from '@tiptap/extension-text-style'
+import Color from '@tiptap/extension-color'
+import { useState, useEffect } from 'react'
+import { IconMapPin, IconPhoto, IconCategory, IconX, IconColorPicker } from '@tabler/icons-react'
 
 // Zod Schema
 const blogPostSchema = z.object({
@@ -28,6 +29,7 @@ type BlogPostFormValues = z.infer<typeof blogPostSchema>
 export default function BlogPostForm() {
   const [galleryPreview, setGalleryPreview] = useState<string[]>([])
   const [featuredPreview, setFeaturedPreview] = useState<string | null>(null)
+  const [selectedColor, setSelectedColor] = useState('#000000')
   
   const { 
     register,
@@ -43,25 +45,48 @@ export default function BlogPostForm() {
     }
   })
 
+  // TipTap Editor Configuration
   const editor = useEditor({
     extensions: [
       StarterKit,
-      Image,
+      TextStyle,
+      Color,
+      Image.configure({
+        HTMLAttributes: {
+          class: 'rounded-lg',
+        },
+      }),
       Placeholder.configure({
         placeholder: 'Share your travel experience...',
       }),
     ],
     content: '',
-    onUpdate: ({ editor }:{editor:any}) => {
+    onUpdate: ({ editor }) => {
       const html = editor.getHTML()
       setValue('content', html)
     },
+    editorProps: {
+      attributes: {
+        class: 'prose max-w-none focus:outline-none min-h-[300px] p-4',
+        style: 'color: inherit', // Allow color inheritance
+      },
+    },
   })
 
-  const handleImageUpload = async (file: File) => {
-    // Implement your image upload logic here
-    return URL.createObjectURL(file)
-  }
+  // Update color when selection changes
+  useEffect(() => {
+    if (!editor) return
+
+    const updateColor = () => {
+      const color = editor.getAttributes('textStyle').color
+      setSelectedColor(color || '#000000')
+    }
+
+    editor.on('selectionUpdate', updateColor)
+    return () => {
+      editor.off('selectionUpdate', updateColor)
+    }
+  }, [editor])
 
   const handleFeaturedImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -81,13 +106,16 @@ export default function BlogPostForm() {
     try {
       // Implement your submission logic
       console.log('Form data:', data)
-      // Reset form after submission
       editor?.commands.clearContent()
       setFeaturedPreview(null)
       setGalleryPreview([])
     } catch (error) {
       console.error('Submission error:', error)
     }
+  }
+
+  if (!editor) {
+    return null
   }
 
   return (
@@ -117,7 +145,109 @@ export default function BlogPostForm() {
           </div>
         </div>
 
-        {/* Location Search */}
+        {/* Content Editor */}
+        <div>
+          <label className="block text-sm font-medium mb-2">Travel Story</label>
+          <div className="border rounded-lg overflow-hidden">
+            <div className="border-b p-2 bg-gray-50 flex gap-2 flex-wrap">
+              {/* Formatting Controls */}
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
+                className={`p-2 rounded ${
+                  editor.isActive('heading', { level: 2 }) 
+                    ? 'bg-blue-100 text-blue-600' 
+                    : 'hover:bg-gray-100'
+                }`}
+              >
+                H2
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleBold().run()}
+                className={`p-2 rounded ${
+                  editor.isActive('bold') 
+                    ? 'bg-blue-100 text-blue-600' 
+                    : 'hover:bg-gray-100'
+                }`}
+              >
+                Bold
+              </button>
+              <button
+                type="button"
+                onClick={() => editor.chain().focus().toggleBulletList().run()}
+                className={`p-2 rounded ${
+                  editor.isActive('bulletList') 
+                    ? 'bg-blue-100 text-blue-600' 
+                    : 'hover:bg-gray-100'
+                }`}
+              >
+                List
+              </button>
+
+              {/* Color Picker */}
+              <div className="relative flex items-center gap-1">
+                <button
+                  type="button"
+                  className="p-2 rounded hover:bg-gray-100"
+                  onClick={() => document.getElementById('colorPicker')?.click()}
+                >
+                  <IconColorPicker className="w-5 h-5" />
+                </button>
+                <input
+                  type="color"
+                  id="colorPicker"
+                  value={selectedColor}
+                  className="absolute opacity-0 w-0 h-0"
+                  onChange={(e) => {
+                    const color = e.target.value
+                    setSelectedColor(color)
+                    editor.chain().focus().setColor(color).run()
+                  }}
+                />
+                <div 
+                  className="w-6 h-6 rounded border"
+                  style={{ backgroundColor: selectedColor }}
+                />
+                <button
+                  type="button"
+                  className="p-2 rounded hover:bg-gray-100"
+                  onClick={() => {
+                    editor.chain().focus().unsetColor().run()
+                    setSelectedColor('#000000')
+                  }}
+                >
+                  Reset
+                </button>
+              </div>
+
+              {/* Image Upload */}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={async (e) => {
+                  const file = e.target.files?.[0]
+                  if (file) {
+                    const url = URL.createObjectURL(file)
+                    editor.chain().focus().setImage({ src: url }).run()
+                  }
+                }}
+                className="hidden"
+                id="editorImage"
+              />
+              <label
+                htmlFor="editorImage"
+                className="p-2 rounded hover:bg-gray-100 cursor-pointer"
+              >
+                Insert Image
+              </label>
+            </div>
+            <EditorContent editor={editor} />
+          </div>
+          {errors.content && <p className="text-red-500 text-sm mt-1">{errors.content.message}</p>}
+        </div>
+
+        {/* Location Input */}
         <div>
           <label className="block text-sm font-medium mb-2 flex items-center gap-1">
             <IconMapPin className="w-5 h-5" /> Location
@@ -128,73 +258,6 @@ export default function BlogPostForm() {
             placeholder="Search location..."
           />
           {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location.message}</p>}
-        </div>
-
-        {/* Featured Image */}
-        <div>
-          <label className="block text-sm font-medium mb-2 flex items-center gap-1">
-            <IconPhoto className="w-5 h-5" /> Featured Image
-          </label>
-          <div className="flex items-center gap-4">
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFeaturedImageChange}
-              className="hidden"
-              id="featuredImage"
-            />
-            <label
-              htmlFor="featuredImage"
-              className="cursor-pointer px-4 py-2 border rounded-lg hover:bg-gray-50"
-            >
-              Upload Image
-            </label>
-            {featuredPreview && (
-              <div className="relative">
-                <img
-                  src={featuredPreview}
-                  alt="Featured preview"
-                  className="w-32 h-32 object-cover rounded-lg"
-                />
-                <button
-                  type="button"
-                  onClick={() => {
-                    setFeaturedPreview(null)
-                    setValue('featuredImage', null as any)
-                  }}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
-                >
-                  <IconX className="w-4 h-4" />
-                </button>
-              </div>
-            )}
-          </div>
-          {errors.featuredImage && (
-            <p className="text-red-500 text-sm mt-1">{errors.featuredImage.message}</p>
-          )}
-        </div>
-
-        {/* Content Editor */}
-        <div>
-          <label className="block text-sm font-medium mb-2">Travel Story</label>
-          <div className="border rounded-lg p-4 min-h-[300px]">
-            {editor && (
-              <div className="flex flex-col gap-4">
-                <div className="flex gap-2 border-b pb-2">
-                  <button
-                    type="button"
-                    onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                    className={`p-2 ${editor.isActive('heading') ? 'bg-gray-200' : ''}`}
-                  >
-                    H2
-                  </button>
-                  {/* Add more editor controls as needed */}
-                </div>
-                {/* <EditorContent editor={editor} /> */}
-              </div>
-            )}
-          </div>
-          {errors.content && <p className="text-red-500 text-sm mt-1">{errors.content.message}</p>}
         </div>
 
         {/* Categories */}
@@ -216,32 +279,6 @@ export default function BlogPostForm() {
             ))}
           </div>
           {errors.categories && <p className="text-red-500 text-sm mt-1">{errors.categories.message}</p>}
-        </div>
-
-        {/* SEO Section */}
-        <div className="bg-gray-50 p-6 rounded-lg">
-          <h3 className="text-lg font-medium mb-4">SEO Settings</h3>
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-2">Meta Title</label>
-              <input
-                {...register('metaTitle')}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                maxLength={60}
-              />
-              <p className="text-sm text-gray-500 mt-1">{watch('metaTitle')?.length || 0}/60</p>
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-2">Meta Description</label>
-              <textarea
-                {...register('metaDescription')}
-                className="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
-                rows={3}
-                maxLength={160}
-              />
-              <p className="text-sm text-gray-500 mt-1">{watch('metaDescription')?.length || 0}/160</p>
-            </div>
-          </div>
         </div>
 
         {/* Submit Section */}
