@@ -10,7 +10,7 @@ export default function FeaturedDestinations() {
           Featured Destinations
         </h2>
         
-        <div className="group relative">
+        <div className=" relative">
           {/* Navigation Arrows */}
           {/* <div className="absolute inset-y-0 -left-4 z-20 hidden items-center md:-left-8 md:flex">
             <button className="rounded-full bg-white/80 p-3 shadow-lg backdrop-blur transition hover:bg-white/90">

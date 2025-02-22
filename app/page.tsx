@@ -35,8 +35,8 @@ export default function Home() {
       <Categories />
       <TopCities />
       <StateHighlights />
-      <Testimonials />
       <Newsletter />
+      <Testimonials />
         
       </main>
     </div>
