@@ -1,24 +1,37 @@
-import withAuth from 'next-auth/middleware';
+import { withAuth } from 'next-auth/middleware';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export default withAuth(
- function middleware(request: NextRequest){
-  // Get a cookie from the request (e.g., "user_token")
-  // const token = request.cookies.get('user_token');
- 
-  // If token is valid, allow the request to proceed
-  return NextResponse.next();
- },
- {
- callbacks:{
-  authorized:(params:any) =>{
-    let {token} = params
-    return !!token;
+  function middleware(req: NextRequest & { nextauth: { token: any } }) {
+    const token = req.nextauth.token;
+    const isAuth = !!token;
+    const { pathname } = req.nextUrl;
+
+    // Define public routes
+    const publicRoutes = ["/login", "/signup"];
+    const isPublicRoute = publicRoutes.includes(pathname);
+
+    // Redirect authenticated users trying to access public routes
+    if (isPublicRoute && isAuth) {
+      return NextResponse.redirect(new URL("/", req.url));
+    }
+
+    return NextResponse.next();
   },
- },
-}
-)
+  {
+    callbacks: {
+      // IMPORTANT: Always return true for public routes
+      authorized: ({ token, req }) => {
+        const publicRoutes = ["/login", "/signup"];
+        return publicRoutes.includes(req.nextUrl.pathname) 
+          ? true  // Allow access to public routes regardless of auth
+          : !!token;  // Protect other routes
+      },
+    },
+  }
+);
+
 export const config = {
-    matcher: ['/about','/profile'],
-}
+  matcher: ["/about", "/profile", "/login", "/signup"],
+};

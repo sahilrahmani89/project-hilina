@@ -31,7 +31,7 @@ const Signin = () => {
     </div>
     <div className="flex items-center justify-center md:w-1/2 w-full bg-[#eee] bg-opacity-90 p-6 md:h-auto h-[90vh] overflow-auto scrollbar-hide">
         <div className='w-full max-w-sm'>
-          <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
+          <h2 className="text-2xl font-bold mb-6 text-center text-black">Sign Up</h2>
           <div className='w-full my-2'>
             <SignInWithGoogle />
           </div>
@@ -88,10 +88,10 @@ const Signin = () => {
         {formError && <p className='text-rose-600'>{formError}</p>}
 
         <div >
-            <p className="text-sm text-center my-3">
+            <p className="text-sm text-center my-3 text-black">
               Already have an account? 
             <Link href="/login" 
-              className="text-[#f9e136] hover:underline font-bold text-[18px]">Login Here!
+              className="text-blue-600 hover:underline font-bold text-[18px] ml-2">Login Here!
             </Link>
             </p>
           </div>

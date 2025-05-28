@@ -19,7 +19,7 @@ export async function POST(req:NextRequest){
     const hashedPassword = await bcrypt.hash(password, 10);
     try{
     //Create the User and associate the Profile
-    let role = email.toLowercase()==='mountreev@gmail.com'? 'admin': 'user'
+    let role = email.toLowerCase()==='mountreev@gmail.com'? 'admin': 'user'
     const newUser = new Users({
         email,
         name,

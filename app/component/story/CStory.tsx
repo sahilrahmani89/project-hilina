@@ -33,6 +33,7 @@
     const [selectedColor, setSelectedColor] = useState("#000000")
 
     const { 
+      getValues,
       register, 
       handleSubmit, 
       formState: { errors, isSubmitting }, 
@@ -105,8 +106,10 @@
       }
     }
 
-    if (!editor) return null
-
+    if (!editor) return( <div>
+Loading..
+    </div>)
+    console.log('valie',getValues())
     return (
       <div className="max-w-4xl mx-auto p-6 bg-[#403e3e] my-8 rounded-md">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">

@@ -32,7 +32,7 @@ const Login = () => {
       </div>
       <div className="flex items-center justify-center md:w-1/2 w-full bg-[#eee] bg-opacity-90 p-6 md:h-auto h-[90vh]">
         <div className='w-full max-w-sm'>
-          <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+          <h2 className="text-2xl font-bold mb-6 text-center text-[#000]">Login</h2>
           <div className='w-full my-2'>
             <SignInWithGoogle />
           </div>
@@ -45,6 +45,7 @@ const Login = () => {
                 required
                 onChange={loginOnChange}
                 value={cred.email}
+                placeholder='Enter your email'
               />
             </div>
             <div className="mb-6">
@@ -55,6 +56,7 @@ const Login = () => {
                 onChange={loginOnChange}
                 type='password'
                 required
+                placeholder='Enter your password'
               />
             </div>
             <Button
@@ -67,10 +69,10 @@ const Login = () => {
             loginError && <p className='text-rose-600'>{loginError}</p>
           }
           <div >
-            <p className="text-sm text-center my-3">
-              Don't have an account? <Link href="/signup" className="text-[#f9e136] hover:underline font-bold text-[18px]">Sign up</Link>
+            <p className="text-sm text-center my-3 text-black">
+              Don't have an account? <Link href="/signup" className="text-blue-600 hover:underline font-bold text-[18px]">Sign up</Link>
             </p>
-            <p className='py-2'>
+            <p className='py-2 text-black'>
                 Forgot password ? <Link href={"/forgot-password"} className='text-blue-600'>
                     Click Here
                 </Link>
